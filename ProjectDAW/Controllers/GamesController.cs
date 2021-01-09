@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +20,6 @@ namespace ProjectDAW.Controllers
         }
 
         // GET: Games
-        [Authorize(Policy = "readpolicy")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Game.ToListAsync());
@@ -56,7 +54,7 @@ namespace ProjectDAW.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,ReleaseDate,Genre,Price")] Game game)
+        public async Task<IActionResult> Create([Bind("Id,Title")] Game game)
         {
             if (ModelState.IsValid)
             {
@@ -88,7 +86,7 @@ namespace ProjectDAW.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,ReleaseDate,Genre,Price")] Game game)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title")] Game game)
         {
             if (id != game.Id)
             {
