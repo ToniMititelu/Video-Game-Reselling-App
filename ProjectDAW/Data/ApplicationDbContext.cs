@@ -21,5 +21,6 @@ namespace ProjectDAW.Data
         public DbSet<GameGenre> GameGenre { get; set; }
         public DbSet<UserGameFavourite> UserGameFavourite { get; set; }
         public DbSet<Listing> Listing { get; set; }
+        public DbSet<Image> Image { get; set; }
     }
 }

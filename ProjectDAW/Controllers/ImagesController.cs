@@ -10,22 +10,23 @@ using ProjectDAW.Models;
 
 namespace ProjectDAW.Controllers
 {
-    public class GamesController : Controller
+    public class ImagesController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public GamesController(ApplicationDbContext context)
+        public ImagesController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Games
+        // GET: Images
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Game.ToListAsync());
+            var applicationDbContext = _context.Image.Include(i => i.Game);
+            return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Games/Details/5
+        // GET: Images/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,41 +34,42 @@ namespace ProjectDAW.Controllers
                 return NotFound();
             }
 
-            var game = await _context.Game
-                .Include(game => game.Image)
+            var image = await _context.Image
+                .Include(i => i.Game)
                 .FirstOrDefaultAsync(m => m.Id == id);
-        
-            if (game == null)
+            if (image == null)
             {
                 return NotFound();
             }
 
-            return View(game);
+            return View(image);
         }
 
-        // GET: Games/Create
+        // GET: Images/Create
         public IActionResult Create()
         {
+            ViewData["GameId"] = new SelectList(_context.Game, "Id", "Title");
             return View();
         }
 
-        // POST: Games/Create
+        // POST: Images/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title")] Game game)
+        public async Task<IActionResult> Create([Bind("Id,Base64Encoded,GameId")] Image image)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(game);
+                _context.Add(image);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(game);
+            ViewData["GameId"] = new SelectList(_context.Game, "Id", "Title", image.GameId);
+            return View(image);
         }
 
-        // GET: Games/Edit/5
+        // GET: Images/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -75,22 +77,23 @@ namespace ProjectDAW.Controllers
                 return NotFound();
             }
 
-            var game = await _context.Game.FindAsync(id);
-            if (game == null)
+            var image = await _context.Image.FindAsync(id);
+            if (image == null)
             {
                 return NotFound();
             }
-            return View(game);
+            ViewData["GameId"] = new SelectList(_context.Game, "Id", "Title", image.GameId);
+            return View(image);
         }
 
-        // POST: Games/Edit/5
+        // POST: Images/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title")] Game game)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Base64Encoded,GameId")] Image image)
         {
-            if (id != game.Id)
+            if (id != image.Id)
             {
                 return NotFound();
             }
@@ -99,12 +102,12 @@ namespace ProjectDAW.Controllers
             {
                 try
                 {
-                    _context.Update(game);
+                    _context.Update(image);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!GameExists(game.Id))
+                    if (!ImageExists(image.Id))
                     {
                         return NotFound();
                     }
@@ -115,10 +118,11 @@ namespace ProjectDAW.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(game);
+            ViewData["GameId"] = new SelectList(_context.Game, "Id", "Title", image.GameId);
+            return View(image);
         }
 
-        // GET: Games/Delete/5
+        // GET: Images/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -126,30 +130,31 @@ namespace ProjectDAW.Controllers
                 return NotFound();
             }
 
-            var game = await _context.Game
+            var image = await _context.Image
+                .Include(i => i.Game)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (game == null)
+            if (image == null)
             {
                 return NotFound();
             }
 
-            return View(game);
+            return View(image);
         }
 
-        // POST: Games/Delete/5
+        // POST: Images/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var game = await _context.Game.FindAsync(id);
-            _context.Game.Remove(game);
+            var image = await _context.Image.FindAsync(id);
+            _context.Image.Remove(image);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool GameExists(int id)
+        private bool ImageExists(int id)
         {
-            return _context.Game.Any(e => e.Id == id);
+            return _context.Image.Any(e => e.Id == id);
         }
     }
 }

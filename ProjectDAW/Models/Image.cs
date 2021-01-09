@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,16 +7,14 @@ using System.Threading.Tasks;
 
 namespace ProjectDAW.Models
 {
-    public class Game
+    public class Image
     {
         public int Id { get; set; }
-
         [Required]
-        [MaxLength(100)]
-        public string Title { get; set; }
+        public String Base64Encoded { get; set; }
 
-        public List<Listing> Listings { get; set; }
-
-        public Image Image { get; set; }
+        public int GameId { get; set; }
+        [ForeignKey("GameId")]
+        public Game Game { get; set; }
     }
 }
