@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using ProjectDAW.Models;
 
 namespace ProjectDAW.Controllers
 {
+    [Authorize]
     public class ContentRatingsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -20,6 +22,7 @@ namespace ProjectDAW.Controllers
         }
 
         // GET: ContentRatings
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             return View(await _context.ContentRating.ToListAsync());

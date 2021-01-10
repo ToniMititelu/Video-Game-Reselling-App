@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using ProjectDAW.Data;
 using ProjectDAW.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProjectDAW.Controllers
 {
@@ -51,6 +52,7 @@ namespace ProjectDAW.Controllers
         }
 
         // GET: Listings/Create
+        [Authorize]
         public IActionResult Create()
         {
             ViewData["GameId"] = new SelectList(_context.Game, "Id", "Title");
@@ -91,6 +93,14 @@ namespace ProjectDAW.Controllers
             {
                 return NotFound();
             }
+
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            bool hasAdmin = (await _userManager.GetRolesAsync(user)).Any(role => role == "Admin");
+            if (user != listing.User && hasAdmin == false)
+            {
+                return Forbid();
+            }
+
             ViewData["GameId"] = new SelectList(_context.Game, "Id", "Title", listing.GameId);
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", listing.UserId);
             return View(listing);
@@ -148,6 +158,13 @@ namespace ProjectDAW.Controllers
             if (listing == null)
             {
                 return NotFound();
+            }
+
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            bool hasAdmin = (await _userManager.GetRolesAsync(user)).Any(role => role == "Admin");
+            if (user != listing.User && hasAdmin == false)
+            {
+                return Forbid();
             }
 
             return View(listing);

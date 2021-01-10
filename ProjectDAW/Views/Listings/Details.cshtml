@@ -2,6 +2,9 @@
 
 @{
     ViewData["Title"] = "Details";
+    var isLoggedIn = Context.User.Identity.IsAuthenticated;
+    var isAdmin = isLoggedIn && Context.User.IsInRole("Admin");
+    var isListingOwner = isLoggedIn && Context.User.Identity.Name == Model.User.UserName;
 }
 
 <h1>Details</h1>
@@ -53,6 +56,8 @@
             @Html.DisplayFor(model => model.BuyNowPrice)
         </dd>
     </dl>
+    @if (Model.Bids.Count > 0)
+    {
     <table class="table">
         <thead>
             <tr>
@@ -71,6 +76,7 @@
         <tbody>
             @foreach (var item in Model.Bids)
             {
+                var isBidOwner = isLoggedIn && Context.User.Identity.Name == item.User.UserName;
                 <tr>
                     <td>
                         @Html.DisplayFor(modelItem => item.Id)
@@ -82,16 +88,23 @@
                         @Html.DisplayFor(modelItem => item.BidAmount)
                     </td>
                     <td>
-                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        @if (isBidOwner || isAdmin)
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        }
                     </td>
                 </tr>
             }
         </tbody>
     </table>
+    }
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    @if (isListingOwner || isAdmin)
+    {
+        <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+        <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+    }
     <a asp-action="Index">Back to List</a>
 </div>

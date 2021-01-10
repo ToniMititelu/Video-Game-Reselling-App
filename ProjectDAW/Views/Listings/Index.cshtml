@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "Index";
+    var isLoggedIn = Context.User.Identity.IsAuthenticated;
+    var isAdmin = isLoggedIn && Context.User.IsInRole("Admin");
 }
 
 <h1>Index</h1>
@@ -17,9 +19,6 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Game)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Title)
@@ -38,15 +37,13 @@
     </thead>
     <tbody>
 @foreach (var item in Model) {
+    var isOwner = isLoggedIn && Context.User.Identity.Name == item.User.UserName;
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.User.Id)
+                @Html.DisplayFor(modelItem => item.User.Email)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Game.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Title)
@@ -61,10 +58,16 @@
                 @Html.DisplayFor(modelItem => item.BuyNowPrice)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
-                <a href="/Bids/Create?listingId=@item.Id">Make bid</a>
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                @if (isOwner || isAdmin)
+                {
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                }
+                @if (isLoggedIn)
+                {
+                    <a href="/Bids/Create?listingId=@item.Id">Make bid</a>
+                }
             </td>
         </tr>
 }

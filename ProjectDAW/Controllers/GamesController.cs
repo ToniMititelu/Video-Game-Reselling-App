@@ -36,6 +36,8 @@ namespace ProjectDAW.Controllers
             }
 
             var game = await _context.Game
+                .Include(game => game.Listings)
+                .ThenInclude(listing => listing.User)
                 .Include(game => game.Image)
                 .Include(g => g.ContentRating)
                 .FirstOrDefaultAsync(m => m.Id == id);
