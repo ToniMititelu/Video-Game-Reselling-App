@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using ProjectDAW.Models.Validators;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -26,6 +27,7 @@ namespace ProjectDAW.Models
         [MinLength(5), MaxLength(100)]
         public string Title { get; set; }
 
+        [ListingValidator]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime ExpiresAt { get; set; }
@@ -33,5 +35,7 @@ namespace ProjectDAW.Models
         [Required]
         public decimal StartingPrice { get; set; }
         public decimal? BuyNowPrice { get; set; }
+
+        public List<Bid> Bids { get; set; }
     }
 }

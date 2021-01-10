@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +23,8 @@ namespace ProjectDAW.Controllers
         // GET: Games
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Game.ToListAsync());
+            var applicationDbContext = _context.Game.Include(g => g.ContentRating);
+            return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: Games/Details/5
@@ -35,8 +37,8 @@ namespace ProjectDAW.Controllers
 
             var game = await _context.Game
                 .Include(game => game.Image)
+                .Include(g => g.ContentRating)
                 .FirstOrDefaultAsync(m => m.Id == id);
-        
             if (game == null)
             {
                 return NotFound();
@@ -46,8 +48,10 @@ namespace ProjectDAW.Controllers
         }
 
         // GET: Games/Create
+        [Authorize]
         public IActionResult Create()
         {
+            ViewData["ContentRatingId"] = new SelectList(_context.ContentRating, "Id", "Title");
             return View();
         }
 
@@ -56,18 +60,27 @@ namespace ProjectDAW.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title")] Game game)
+        public async Task<IActionResult> Create([Bind("Id,Title,ReleaseDate,Description,ContentRatingId,Image")] Game game)
         {
+            Image image = new Image();
+            image.Base64Encoded = game.Image.Base64Encoded;
+            image.Game = game;
+            image.GameId = game.Id;
+
+            game.Image = image;
+
             if (ModelState.IsValid)
             {
                 _context.Add(game);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ContentRatingId"] = new SelectList(_context.ContentRating, "Id", "Title", game.ContentRatingId);
             return View(game);
         }
 
         // GET: Games/Edit/5
+        [Authorize(Policy = "writepolicy")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -80,6 +93,7 @@ namespace ProjectDAW.Controllers
             {
                 return NotFound();
             }
+            ViewData["ContentRatingId"] = new SelectList(_context.ContentRating, "Id", "Title", game.ContentRatingId);
             return View(game);
         }
 
@@ -88,7 +102,7 @@ namespace ProjectDAW.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title")] Game game)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,ReleaseDate,Description,ContentRatingId")] Game game)
         {
             if (id != game.Id)
             {
@@ -115,10 +129,12 @@ namespace ProjectDAW.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ContentRatingId"] = new SelectList(_context.ContentRating, "Id", "Title", game.ContentRatingId);
             return View(game);
         }
 
         // GET: Games/Delete/5
+        [Authorize(Policy = "writepolicy")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -127,6 +143,7 @@ namespace ProjectDAW.Controllers
             }
 
             var game = await _context.Game
+                .Include(g => g.ContentRating)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (game == null)
             {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,10 +14,12 @@ namespace ProjectDAW.Controllers
     public class BidsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public BidsController(ApplicationDbContext context)
+        public BidsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Bids
@@ -47,10 +50,11 @@ namespace ProjectDAW.Controllers
         }
 
         // GET: Bids/Create
-        public IActionResult Create()
+        public IActionResult Create(int listingId)
         {
-            ViewData["ListingId"] = new SelectList(_context.Listing, "Id", "Description");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
+            Console.WriteLine($"listing = {listingId}");
+            HttpContext.Request.QueryString.Add("listingId", listingId.ToString());
+            ViewData["ListingId"] = listingId;
             return View();
         }
 
@@ -59,16 +63,26 @@ namespace ProjectDAW.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ListingId,UserId,BidAmount")] Bid bid)
+        public async Task<IActionResult> Create([Bind("Id,ListingId,BidAmount")] Bid bid)
         {
+            var listingId = bid.ListingId;
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            var gameListing = await _context.Listing.FirstOrDefaultAsync(m => m.Id == listingId);
+
+            if (gameListing == null)
+            {
+                return NotFound("Listing does not exist");
+            }
+
+            bid.User = user;
+            bid.Listing = gameListing;
+
             if (ModelState.IsValid)
             {
                 _context.Add(bid);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ListingId"] = new SelectList(_context.Listing, "Id", "Description", bid.ListingId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", bid.UserId);
             return View(bid);
         }
 

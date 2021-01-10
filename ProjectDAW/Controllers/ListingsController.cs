@@ -7,16 +7,19 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ProjectDAW.Data;
 using ProjectDAW.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace ProjectDAW.Controllers
 {
     public class ListingsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ListingsController(ApplicationDbContext context)
+        public ListingsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Listings
@@ -37,6 +40,7 @@ namespace ProjectDAW.Controllers
             var listing = await _context.Listing
                 .Include(l => l.Game)
                 .Include(l => l.User)
+                .Include(l => l.Bids)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (listing == null)
             {
@@ -59,8 +63,10 @@ namespace ProjectDAW.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,UserId,GameId,Description,Title,ExpiresAt,StartingPrice,BuyNowPrice")] Listing listing)
+        public async Task<IActionResult> Create([Bind("Id,GameId,Description,Title,ExpiresAt,StartingPrice,BuyNowPrice")] Listing listing)
         {
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            listing.User = user;
             if (ModelState.IsValid)
             {
                 _context.Add(listing);

@@ -13,5 +13,7 @@ namespace ProjectDAW.Models
         public string Nickname { get; set; }
 
         public List<Listing> Listings { get; set; }
+
+        public List<Bid> Bids { get; set; }
     }
 }

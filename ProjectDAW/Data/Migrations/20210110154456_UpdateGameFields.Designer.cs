@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProjectDAW.Data;
 
 namespace ProjectDAW.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210110154456_UpdateGameFields")]
+    partial class UpdateGameFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -475,13 +477,13 @@ namespace ProjectDAW.Data.Migrations
             modelBuilder.Entity("ProjectDAW.Models.Bid", b =>
                 {
                     b.HasOne("ProjectDAW.Models.Listing", "Listing")
-                        .WithMany("Bids")
+                        .WithMany()
                         .HasForeignKey("ListingId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("ProjectDAW.Models.ApplicationUser", "User")
-                        .WithMany("Bids")
+                        .WithMany()
                         .HasForeignKey("UserId");
 
                     b.Navigation("Listing");
@@ -575,8 +577,6 @@ namespace ProjectDAW.Data.Migrations
 
             modelBuilder.Entity("ProjectDAW.Models.ApplicationUser", b =>
                 {
-                    b.Navigation("Bids");
-
                     b.Navigation("Listings");
                 });
 
@@ -585,11 +585,6 @@ namespace ProjectDAW.Data.Migrations
                     b.Navigation("Image");
 
                     b.Navigation("Listings");
-                });
-
-            modelBuilder.Entity("ProjectDAW.Models.Listing", b =>
-                {
-                    b.Navigation("Bids");
                 });
 #pragma warning restore 612, 618
         }
