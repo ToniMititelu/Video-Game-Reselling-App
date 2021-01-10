@@ -11,6 +11,7 @@ namespace ProjectDAW.Models
     {
         public int Id { get; set; }
         [Required]
+        [Display(Name = "Image Source")]
         public String Base64Encoded { get; set; }
 
         public int GameId { get; set; }

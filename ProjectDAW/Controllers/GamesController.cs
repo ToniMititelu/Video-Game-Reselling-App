@@ -23,7 +23,9 @@ namespace ProjectDAW.Controllers
         // GET: Games
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Game.Include(g => g.ContentRating);
+            var applicationDbContext = _context.Game
+                .Include(g => g.Listings)
+                .Include(g => g.ContentRating);
             return View(await applicationDbContext.ToListAsync());
         }
 

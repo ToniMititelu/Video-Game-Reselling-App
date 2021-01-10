@@ -11,6 +11,9 @@
 <div>
     <h4>Game</h4>
     <hr />
+    <div class="col-sm-10" style="text-align: center; margin-bottom: 50px">
+        <img src="@Html.DisplayFor(model => model.Image.Base64Encoded)" />
+    </div>
     <dl class="row">
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Title)
@@ -36,77 +39,74 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.ContentRating.Title)
         </dd>
-        <dd class="col-sm-10">
-            <img src="@Html.DisplayFor(model => model.Image.Base64Encoded)" />
-        </dd>
     </dl>
     @if (Model.Listings.Count > 0)
     {
         var listings = Model.Listings;
         <h4>Listings</h4>
         <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    User
-                </th>
-                <th>
-                    Title
-                </th>
-                <th>
-                    ExpiresAt
-                </th>
-                <th>
-                    StartingPrice
-                </th>
-                <th>
-                    Buy Now
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in listings)
-            {
-                var isOwner = isLoggedIn && Context.User.Identity.Name == item.User.UserName;
+            <thead>
                 <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.User.Email)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Title)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ExpiresAt)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.StartingPrice)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.BuyNowPrice)
-                    </td>
-                    <td>
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-                        @if (isOwner || isAdmin)
-                        {
-                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                        }
-                        @if (isLoggedIn)
-                        {
-                            <a href="/Bids/Create?listingId=@item.Id">Make bid</a>
-                        }
-                    </td>
+                    <th>
+                        User
+                    </th>
+                    <th>
+                        Title
+                    </th>
+                    <th>
+                        ExpiresAt
+                    </th>
+                    <th>
+                        StartingPrice
+                    </th>
+                    <th>
+                        Buy Now
+                    </th>
+                    <th></th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var item in listings)
+                {
+                    var isOwner = isLoggedIn && Context.User.Identity.Name == item.User.UserName;
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.User.Email)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Title)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ExpiresAt)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.StartingPrice)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BuyNowPrice)
+                        </td>
+                        <td>
+                            <a asp-controller="Listings" asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
+                            @if (isOwner || isAdmin)
+                            {
+                                <a asp-controller="Listings" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Edit</a>
+                                <a asp-controller="Listings" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+                            }
+                            @if (isLoggedIn)
+                            {
+                                <a href="/Bids/Create?listingId=@item.Id" class="btn btn-secondary">Make bid</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     }
 </div>
 <div>
     @if (isAdmin)
     {
-        <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
     }
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" class="btn btn-dark">Back to List</a>
 </div>

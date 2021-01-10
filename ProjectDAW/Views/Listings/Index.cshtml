@@ -15,13 +15,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Game)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.ExpiresAt)
@@ -32,6 +26,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.BuyNowPrice)
             </th>
+            <th>
+                No. of bidings
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -40,13 +37,7 @@
     var isOwner = isLoggedIn && Context.User.Identity.Name == item.User.UserName;
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.User.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Game.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
+                <a href="/Games/Details/@item.Game.Id" target="_blank">@Html.DisplayFor(modelItem => item.Game.Title)</a>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ExpiresAt)
@@ -58,15 +49,18 @@
                 @Html.DisplayFor(modelItem => item.BuyNowPrice)
             </td>
             <td>
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                @Html.DisplayFor(modelItem => item.Bids.Count)
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
                 @if (isOwner || isAdmin)
                 {
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
                 }
                 @if (isLoggedIn)
                 {
-                    <a href="/Bids/Create?listingId=@item.Id">Make bid</a>
+                    <a href="/Bids/Create?listingId=@item.Id" class="btn btn-secondary">Make bid</a>
                 }
             </td>
         </tr>

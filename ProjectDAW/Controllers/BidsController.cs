@@ -25,7 +25,11 @@ namespace ProjectDAW.Controllers
         // GET: Bids
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Bid.Include(b => b.Listing).Include(b => b.User);
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            var applicationDbContext = _context.Bid
+                .Include(b => b.Listing)
+                .Include(b => b.User)
+                .Where(b => b.User == user);
             return View(await applicationDbContext.ToListAsync());
         }
 
