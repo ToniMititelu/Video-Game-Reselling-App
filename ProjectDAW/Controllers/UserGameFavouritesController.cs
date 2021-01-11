@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,10 +14,12 @@ namespace ProjectDAW.Controllers
     public class UserGameFavouritesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public UserGameFavouritesController(ApplicationDbContext context)
+        public UserGameFavouritesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: UserGameFavourites
@@ -47,10 +50,9 @@ namespace ProjectDAW.Controllers
         }
 
         // GET: UserGameFavourites/Create
-        public IActionResult Create()
+        public IActionResult Create(int gameId)
         {
-            ViewData["GameId"] = new SelectList(_context.Game, "Id", "Title");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["GameId"] = gameId;
             return View();
         }
 
@@ -59,16 +61,28 @@ namespace ProjectDAW.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,GameId,UserId")] UserGameFavourite userGameFavourite)
+        public async Task<IActionResult> Create([Bind("Id,GameId")] UserGameFavourite userGameFavourite)
         {
+            var gameId = userGameFavourite.GameId;
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            var game = await _context.Game.FirstOrDefaultAsync(m => m.Id == gameId);
+
+            if (game == null || user == null)
+            {
+                return NotFound();
+            }
+
+            userGameFavourite.User = user;
+            userGameFavourite.Game = game;
+
             if (ModelState.IsValid)
             {
                 _context.Add(userGameFavourite);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["GameId"] = new SelectList(_context.Game, "Id", "Title", userGameFavourite.GameId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", userGameFavourite.UserId);
+            Console.WriteLine($"user = {user.Id}");
+            Console.WriteLine($"game = {game.Id}");
             return View(userGameFavourite);
         }
 

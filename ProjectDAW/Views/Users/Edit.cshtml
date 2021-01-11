@@ -1,0 +1,53 @@
+﻿
+@{
+}
+
+<h1 class="text-light">Edit</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th class="text-light">
+                User ID
+            </th>
+            <th class="text-light">
+                User Email
+            </th>
+            <th class="text-light">
+                User Role
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="text-light">
+                @ViewBag.user.Id
+            </td>
+            <td class="text-light">
+                @ViewBag.user.Email
+            </td>
+            <td class="text-light">
+                @ViewBag.roles[0]
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <input type="hidden" for="Id" placeholder="@ViewBag.user.Id"/>
+            <div class="form-group">
+                <label for="Role" class="control-label text-light">Role</label>
+                <input class="form-control" value="@ViewBag.roles[0]"/>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

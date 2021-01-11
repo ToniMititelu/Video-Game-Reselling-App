@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,10 +15,12 @@ namespace ProjectDAW.Controllers
     public class GamesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public GamesController(ApplicationDbContext context)
+        public GamesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Games
@@ -27,6 +30,29 @@ namespace ProjectDAW.Controllers
                 .Include(g => g.Listings)
                 .Include(g => g.ContentRating);
             return View(await applicationDbContext.ToListAsync());
+        }
+
+        // GET: Favourite games
+        [Authorize]
+        public async Task<IActionResult> Mine()
+        {
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            var gameFavs = await _context.UserGameFavourite.Where(g => g.User == user).ToListAsync();
+
+            var myFavs = new List<int>();
+
+            foreach(var g in gameFavs) 
+            {
+                Console.WriteLine(g.GameId);
+                myFavs.Add(g.GameId);
+            }
+
+            var applicationDbContext = _context.Game
+                .Include(g => g.Listings)
+                .Include(g => g.ContentRating)
+                .Where(g => myFavs.Contains(g.Id));
+                
+            return View("Index", await applicationDbContext.ToListAsync());
         }
 
         // GET: Games/Details/5
