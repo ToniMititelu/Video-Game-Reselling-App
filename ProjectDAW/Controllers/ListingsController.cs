@@ -45,6 +45,7 @@ namespace ProjectDAW.Controllers
                 .Include(l => l.Game)
                 .Include(l => l.User)
                 .Include(l => l.Bids)
+                .ThenInclude(bid => bid.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (listing == null)
             {

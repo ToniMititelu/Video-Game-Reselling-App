@@ -4,43 +4,43 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h1 class="text-light">Create</h1>
 
-<h4>Game</h4>
+<h4 class="text-light">Game</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div class="form-group">
-                <div>Make sure you get everythin correct. You can't edit this later. Games are used for multiple listings and it could harm other users if you edit it after. Only an Admin can modify it.</div>
+                <div class="text-light">Make sure you get everythin correct. You can't edit this later. Games are used for multiple listings and it could harm other users if you edit it after. Only an Admin can modify it.</div>
             </div>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
+                <label asp-for="Title" class="control-label text-light"></label>
                 <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ReleaseDate" class="control-label"></label>
+                <label asp-for="ReleaseDate" class="control-label text-light"></label>
                 <input asp-for="ReleaseDate" class="form-control" />
                 <span asp-validation-for="ReleaseDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
+                <label asp-for="Description" class="control-label text-light"></label>
                 <input asp-for="Description" class="form-control" />
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ContentRatingId" class="control-label"></label>
+                <label asp-for="ContentRatingId" class="control-label text-light"></label>
                 <select asp-for="ContentRatingId" class="form-control" asp-items="ViewBag.ContentRatingId"></select>
             </div>
             <div class="form-group">
-                <label asp-for="Image.Base64Encoded" class="control-label"></label>
+                <label asp-for="Image.Base64Encoded" class="control-label text-light"></label>
                 <input asp-for="Image.Base64Encoded" class="form-control" />
                 <span asp-validation-for="Image.Base64Encoded" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <div>We don't have the budget to upload photos so yeah, just go and encode the image <a href="https://www.base64-image.de/" target="_blank">here</div>
+                <div class="text-light">We don't have the budget to upload photos so yeah, just go and encode the image <a href="https://www.base64-image.de/" target="_blank">here</div>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

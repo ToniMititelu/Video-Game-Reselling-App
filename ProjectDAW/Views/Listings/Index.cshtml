@@ -6,27 +6,27 @@
     var isAdmin = isLoggedIn && Context.User.IsInRole("Admin");
 }
 
-<h1>Index</h1>
+<h1 class="text-light">Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-info" style="border-radius: 25px">+</a>
 </p>
 <table class="table">
     <thead>
         <tr>
-            <th>
+            <th  class="text-light">
                 @Html.DisplayNameFor(model => model.Game)
             </th>
-            <th>
+            <th  class="text-light">
                 @Html.DisplayNameFor(model => model.ExpiresAt)
             </th>
-            <th>
+            <th  class="text-light">
                 @Html.DisplayNameFor(model => model.StartingPrice)
             </th>
-            <th>
+            <th  class="text-light">
                 @Html.DisplayNameFor(model => model.BuyNowPrice)
             </th>
-            <th>
+            <th  class="text-light">
                 No. of bidings
             </th>
             <th></th>
@@ -37,18 +37,18 @@
     var isOwner = isLoggedIn && Context.User.Identity.Name == item.User.UserName;
         <tr>
             <td>
-                <a href="/Games/Details/@item.Game.Id" target="_blank">@Html.DisplayFor(modelItem => item.Game.Title)</a>
+                <a class="text-info" href="/Games/Details/@item.Game.Id" target="_blank">@Html.DisplayFor(modelItem => item.Game.Title)</a>
             </td>
-            <td>
+            <td class="text-light">
                 @Html.DisplayFor(modelItem => item.ExpiresAt)
             </td>
-            <td>
+            <td class="text-light">
                 @Html.DisplayFor(modelItem => item.StartingPrice)
             </td>
-            <td>
+            <td class="text-light">
                 @Html.DisplayFor(modelItem => item.BuyNowPrice)
             </td>
-            <td>
+            <td class="text-light">
                 @Html.DisplayFor(modelItem => item.Bids.Count)
             </td>
             <td>

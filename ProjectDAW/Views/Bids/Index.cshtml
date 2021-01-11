@@ -4,18 +4,18 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1 class="text-light">Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-info" style="border-radius: 25px">+</a>
 </p>
 <table class="table">
     <thead>
         <tr>
-            <th>
+            <th class="text-light">
                 @Html.DisplayNameFor(model => model.Listing)
             </th>
-            <th>
+            <th class="text-light">
                 @Html.DisplayNameFor(model => model.BidAmount)
             </th>
             <th></th>
@@ -25,11 +25,11 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                <a href="Listings/Details/@item.Listing.Id">
+                <a href="Listings/Details/@item.Listing.Id" class="text-info">
                     @Html.DisplayFor(modelItem => item.Listing.Description)
                 </a>
             </td>
-            <td>
+            <td class="text-light">
                 @Html.DisplayFor(modelItem => item.BidAmount)
             </td>
             <td>

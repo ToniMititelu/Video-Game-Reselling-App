@@ -7,52 +7,52 @@
     var isListingOwner = isLoggedIn && Context.User.Identity.Name == Model.User.UserName;
 }
 
-<h1>Details</h1>
+<h1 class="text-light">Details</h1>
 
 <div>
-    <h4>Listing</h4>
+    <h4 class="text-light">Listing</h4>
     <hr />
     <dl class="row">
-        <dt class="col-sm-2">
+        <dt class="col-sm-2 text-light">
             @Html.DisplayNameFor(model => model.Title)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-10 text-light">
             @Html.DisplayFor(model => model.Title)
         </dd>
-        <dt class="col-sm-2">
+        <dt class="col-sm-2 text-light">
             @Html.DisplayNameFor(model => model.User)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-10 text-light">
             @Html.DisplayFor(model => model.User.Email)
         </dd>
-        <dt class="col-sm-2">
+        <dt class="col-sm-2 text-light">
             @Html.DisplayNameFor(model => model.Game)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-10 text-light">
             <a href="/Games/Details/@Model.Game.Id" target="_blank">@Html.DisplayFor(modelItem => modelItem.Game.Title)</a>
         </dd>
-        <dt class="col-sm-2">
+        <dt class="col-sm-2 text-light">
             @Html.DisplayNameFor(model => model.Description)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-10 text-light">
             @Html.DisplayFor(model => model.Description)
         </dd>
-        <dt class="col-sm-2">
+        <dt class="col-sm-2 text-light">
             @Html.DisplayNameFor(model => model.ExpiresAt)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-10 text-light">
             @Html.DisplayFor(model => model.ExpiresAt)
         </dd>
-        <dt class="col-sm-2">
+        <dt class="col-sm-2 text-light">
             @Html.DisplayNameFor(model => model.StartingPrice)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-10 text-light">
             @Html.DisplayFor(model => model.StartingPrice)
         </dd>
-        <dt class="col-sm-2">
+        <dt class="col-sm-2 text-light">
             @Html.DisplayNameFor(model => model.BuyNowPrice)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-10 text-light">
             @Html.DisplayFor(model => model.BuyNowPrice)
         </dd>
     </dl>
@@ -61,10 +61,10 @@
     <table class="table">
         <thead>
             <tr>
-                <th>
+                <th class="text-light">
                     User
                 </th>
-                <th>
+                <th class="text-light">
                     Amount
                 </th>
             </tr>
@@ -74,10 +74,10 @@
             {
                 var isBidOwner = isLoggedIn;
                 <tr>
-                    <td>
+                    <td class="text-light">
                         @Html.DisplayFor(modelItem => item.User.Email)
                     </td>
-                    <td>
+                    <td class="text-light">
                         @Html.DisplayFor(modelItem => item.BidAmount)
                     </td>
                 </tr>

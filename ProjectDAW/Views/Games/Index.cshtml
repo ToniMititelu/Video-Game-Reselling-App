@@ -6,24 +6,24 @@
     var isAdmin = isLoggedIn && Context.User.IsInRole("Admin");
 }
 
-<h1>Index</h1>
+<h1 class="text-light">Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-info" style="border-radius: 25px">+</a>
 </p>
 <table class="table">
     <thead>
         <tr>
-            <th>
+            <th class="text-light">
                 @Html.DisplayNameFor(model => model.Title)
             </th>
-            <th>
+            <th class="text-light">
                 @Html.DisplayNameFor(model => model.ReleaseDate)
             </th>
-            <th>
+            <th class="text-light">
                 @Html.DisplayNameFor(model => model.ContentRating)
             </th>
-            <th>
+            <th class="text-light">
                 No. of listings
             </th>
             <th></th>
@@ -33,15 +33,15 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                <a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Title)</a>
+                <a class="text-info" asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Title)</a>
             </td>
-            <td>
+            <td class="text-light">
                 @Html.DisplayFor(modelItem => item.ReleaseDate)
             </td>
-            <td>
+            <td class="text-light">
                 @Html.DisplayFor(modelItem => item.ContentRating.Title)
             </td>
-            <td>
+            <td class="text-light">
                 @Html.DisplayFor(modelItem => item.Listings.Count)
             </td>
             <td>
